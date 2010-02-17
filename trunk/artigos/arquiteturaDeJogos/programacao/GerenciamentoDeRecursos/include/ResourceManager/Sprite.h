@@ -1,3 +1,28 @@
+/******************************************************************************
+*
+* COPYRIGHT Bruno C Sanches ALL RIGHTS RESERVED.
+*
+* This software cannot be copied, stored, distributed without  
+* Bruno C Sanches prior authorization.
+*
+* This file was made available on http://www.pontov.com.br and it is free 
+* to be restributed or used under Creative Commons license 2.5 br: 
+* http://creativecommons.org/licenses/by-sa/2.5/br/
+*
+* This work was based on Paulo V. W. Radtke animation software.
+*
+*******************************************************************************
+* Este software nao pode ser copiado, armazenado, distribuido sem autorização 
+* a priori de Bruno C Sanches
+*
+* Este arquivo foi disponibilizado no site http://www.pontov.com.br e esta 
+* livre para distribuição seguindo a licença Creative Commons 2.5 br: 
+* http://creativecommons.org/licenses/by-sa/2.5/br/
+*
+* Este trabalho é baseado no software de animação criado por Paulo V. W. Radtke
+* 
+******************************************************************************/
+
 #ifndef SPRITE_H
 #define SPRITE_H
 
@@ -15,26 +40,23 @@ namespace pontov
 	class Sprite_c: public RefCounter_c
 	{
 		public:
-			Sprite_c(const std::string &name, int startX, int startY);
+			Sprite_c(const std::string &name, float startX, float startY);
 
-			inline void SetPosX(int x)
+			inline float GetPosX()
 			{
-				iPosX = x;
+				return fPosX;
 			}
 
-			inline int GetPosX()
+			inline void Update(SDL_Surface &dest, Uint32 ticks)
 			{
-				return iPosX;
-			}
+				fPosX += (float)(ticks * 200 / 1000.0);
 
-			inline void Blit(SDL_Surface &dest)
-			{
-				ipTexture->Blit(dest, iPosX, iPosY);
+				ipTexture->Blit(dest, (int)fPosX, (int)fPosY);
 			}
 
 		private:
 			TextureResourcePtr_t ipTexture;
-			int iPosX, iPosY;
+			float fPosX, fPosY;
 	};
 }
 
