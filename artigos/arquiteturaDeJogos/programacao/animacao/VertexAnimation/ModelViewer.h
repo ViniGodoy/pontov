@@ -9,7 +9,7 @@
 class ModelViewer : public GameSteps
 {
     public:
-        explicit ModelViewer();
+        explicit ModelViewer(const char *modelName, const char *textureName);
 
         virtual void setup();
 
@@ -21,12 +21,15 @@ class ModelViewer : public GameSteps
 
         virtual void teardown();
     private:
-        float degreesToRotate;
-        bool exit;
+        float fpDegreesToRotate;
+        bool fExit;
+		bool fPaused;
+		bool fInterpolate;
 
 		std::auto_ptr<md2::Model> apModel;
 
-
+		std::string strModelName;
+		std::string strTextureName;
 };
 
 #endif 
