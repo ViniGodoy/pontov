@@ -9,7 +9,15 @@
 
 using namespace md2;
 
-ModelViewer::ModelViewer() : exit(false), degreesToRotate(0) {}
+ModelViewer::ModelViewer(const char *modelName, const char *textureName): 
+	fExit(false), 
+	fPaused(false),
+	fInterpolate(true),
+	fpDegreesToRotate(0),
+	strModelName(modelName),
+	strTextureName(textureName)
+{
+}
 
 void MyGluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar)
 {
@@ -20,14 +28,13 @@ void MyGluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble z
    xmin = ymin * aspect;
    xmax = ymax * aspect;
 
-
    glFrustum(xmin, xmax, ymin, ymax, zNear, zFar);   	
 }
 
-
 void ModelViewer::setup()
 {	
-	apModel.reset(new Model("data/models/penguim.md2", "data/models/penguimRed.png"));
+	apModel.reset(new Model(strModelName, strTextureName));
+	apModel->play("run", true);
 
 	glMatrixMode (GL_PROJECTION);
         glLoadIdentity();
@@ -47,13 +54,34 @@ void ModelViewer::processEvents(const SDL_Event& event)
     switch (event.type)
     {
         case SDL_QUIT:
-            exit = true;
+            fExit = true;
             break;
 
 		case SDL_KEYDOWN:
-			if(event.key.keysym.sym == SDLK_ESCAPE)
-				exit = true;
-			break;
+			switch(event.key.keysym.sym)
+			{
+				case SDLK_ESCAPE:
+					fExit = true;
+					break;
+
+				case SDLK_SPACE:
+					fPaused = !fPaused;
+					break;
+
+				case SDLK_UP:
+					apModel->playNextAnimation();
+					break;
+
+				case SDLK_DOWN:
+					apModel->playPreviousAnimation();
+					break;
+
+				case SDLK_i:
+					fInterpolate = !fInterpolate;
+					apModel->setInpoterlate(fInterpolate);
+					break;
+			}			
+			break;		
     }
 }
 
@@ -68,10 +96,13 @@ void ModelViewer::processLogics()
 
     //Está com a seta esquerda pressionada?
     if (keys[SDLK_LEFT])
-        degreesToRotate += distance;
+        fpDegreesToRotate += distance;
     //Está com a seta direita pressionada?
     else if (keys[SDLK_RIGHT])
-        degreesToRotate -= distance;
+        fpDegreesToRotate -= distance;	
+
+	if(!fPaused)
+		apModel->process();
 }
 
 void ModelViewer::draw() const
@@ -79,28 +110,10 @@ void ModelViewer::draw() const
 	//Limpa a tela
     glClearColor(0.0, 0.0, 0.0, 0.0);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
-	/*
-    glPushMatrix();        
-        //Gira o triângulo
-		glTranslatef(0,0.0f,-6.0f);
-        glRotatef(degreesToRotate, 0,0,1);
-
-        //Desenha o triângulo
-        glBegin(GL_TRIANGLES);
-            glColor3f(1,0,0);
-            glVertex2f(0.0f,0.5f);
-            glColor3f(0,1,0);
-            glVertex2f(-0.5f, -0.5f);
-            glColor3f(0,0,1);
-            glVertex2f(0.5f, -0.5f);
-        glEnd();
-    glPopMatrix();*/
-	
-
+		
 	glPushMatrix();		
 		glTranslatef(0, 0, -50);
-		glRotatef(degreesToRotate, 0,1,0);
+		glRotatef(fpDegreesToRotate, 0,1,0);
 		apModel->draw();
 	glPopMatrix();
 	
@@ -108,7 +121,7 @@ void ModelViewer::draw() const
 
 bool ModelViewer::ended()
 {
-    return exit;
+    return fExit;
 }
 
 void ModelViewer::teardown() {}
