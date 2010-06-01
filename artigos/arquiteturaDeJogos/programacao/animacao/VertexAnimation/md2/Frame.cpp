@@ -3,11 +3,26 @@
 #include "Frame.h"
 #include "../math/MathUtil.h"
 
-using namespace md2;
-
-Frame::Frame(const std::vector<Vertex>& _vertices)
+namespace md2
 {
-    set(_vertices);
+
+Frame::Frame(std::istream &stream, int numVertices, const Md2Frame_t &frameHeader, float scale):
+	vertices(numVertices)
+{
+	for(int i = 0;i < numVertices; ++i)
+	{
+		Md2Vertex_t v;
+
+		//read the vertex
+		stream.read(reinterpret_cast<char*>(&v), sizeof(v));
+
+		vertices[i] = Vertex(
+                (v.v[0] * frameHeader.scale[0] + frameHeader.translate[0]) * scale,
+                (v.v[1] * frameHeader.scale[1] + frameHeader.translate[1]) * scale,
+                (v.v[2] * frameHeader.scale[2] + frameHeader.translate[2]) * scale,
+                 v.normalIndex
+		);		
+	}
 }
 
 void Frame::set(const std::vector<Vertex>& _vertices)
@@ -46,7 +61,7 @@ void Frame::draw(const std::vector<GlCommands> &commands, const Frame& nextFrame
         return;
     }
 
-    for (unsigned i = 0; i < commands.size(); i++)
+    for (unsigned i = 0, len = commands.size(); i < len; i++)
     {
         commands[i].begin();
             for (unsigned j = 0; j < commands[i].getVertices().size(); j++)
@@ -89,4 +104,6 @@ void Frame::setMinMax(float value, float &min, float &max) const
         min = value;
     else if (value > max)
         max = value;
+}
+
 }

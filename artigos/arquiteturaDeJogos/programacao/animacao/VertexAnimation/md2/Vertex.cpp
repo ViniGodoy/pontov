@@ -7,6 +7,12 @@ Vec3 Vertex::NORMALS[] = {
 #include "anorms.h"
 };
 
+Vertex::Vertex():
+	vertex(0, 0, 0),
+	lightNormal(0, 0, 0)
+{
+	//empty
+}
 
 Vertex::Vertex(float x, float y, float z, int _lightNormal) :
 vertex(y, z, x), lightNormal(NORMALS[_lightNormal][1], NORMALS[_lightNormal][2], NORMALS[_lightNormal][0])
