@@ -2,8 +2,6 @@
 
 #include <SDL.h>
 
-using md2::Animation;
-
 namespace md2
 {
 
@@ -12,9 +10,9 @@ Animation::Animation(const std::string& _name, float _speed, bool _loop)
 {
 }
 
-void Animation::add(const Frame& frame)
+void Animation::readFrame(std::istream &stream, int numVertices, const Md2Frame_t &frameHeader, float scale)
 {
-    frames.push_back(frame);
+	frames.push_back(Frame(stream, numVertices, frameHeader, scale));
 }
 
 void Animation::process()
@@ -49,15 +47,15 @@ void Animation::process()
     }
 }
 
-void Animation::draw(const std::vector<GlCommands> &commands) const
+void Animation::draw(const std::vector<GlCommands> &commands, bool interpolate) const
 {
     unsigned frame = static_cast<unsigned>(currentFrame); //Gets the frame index
     float interpolation = currentFrame - frame;
 
     if (frame == size())
         frame = 0;
-
-    if (interpolation == 0)
+	
+    if ((interpolation == 0) || (!interpolate))
     {
         frames[frame].draw(commands);
     }

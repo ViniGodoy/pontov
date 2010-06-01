@@ -12,6 +12,7 @@ namespace md2
     class Vertex
     {
         public:
+			Vertex();
             explicit Vertex(float x, float y, float z, int lightNormal);
             explicit Vertex(const math::Vector3D& _vertex, const math::Vector3D& _lightNormal);
 

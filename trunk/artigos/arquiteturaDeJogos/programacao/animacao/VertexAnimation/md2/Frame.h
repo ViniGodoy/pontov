@@ -7,6 +7,7 @@
 
 #include "GlCommands.h"
 #include "Vertex.h"
+#include "md2.h"
 
 #include <Box.h>
 
@@ -16,8 +17,8 @@ namespace md2
     class Frame
     {
         public:
-            explicit Frame() {}
-            explicit Frame(const std::vector<Vertex>& _vertices);
+            explicit Frame() {}            
+			explicit Frame(std::istream &stream, int numVertices, const Md2Frame_t &frameHeader, float scale);
 
             void set(const std::vector<Vertex>& _vertices);
 

@@ -34,17 +34,31 @@ namespace md2
 
             const math::Box& getBounds() const;
 
+			void playNextAnimation();
+			void playPreviousAnimation();
+
+			inline void setInpoterlate(bool onOff)
+			{
+				fInterpolate = onOff;
+			}
+
         private:
+			void setAnimation(Animation *anim, bool playing=false, bool looping=true);
+
             float scale;
 
             Animation* currentAnimation;
 
             std::vector<GlCommands> commands;
-            std::map<std::string, Animation*> animations;
+
+			typedef std::map<std::string, Animation*> AnimationMap_t;
+            AnimationMap_t animations;			
 
 			void load(const std::string& filename, float loadScale);
             Animation* createAnimationIfNeed(const char* frameName);
             ogl::Texture texture;
+
+			bool fInterpolate;
 
     };
 }
