@@ -46,11 +46,6 @@ void Frame::set(const std::vector<Vertex>& _vertices)
     bounds.set(minX, minY, minZ, maxX, maxY, maxZ);
 }
 
-const Vertex& Frame::get(int index) const
-{
-    return vertices[index];
-}
-
 void Frame::draw(const std::vector<GlCommands> &commands, const Frame& nextFrame, float interpolation) const
 {
     math::padValue(interpolation, 0.0, 1.0);
@@ -69,8 +64,8 @@ void Frame::draw(const std::vector<GlCommands> &commands, const Frame& nextFrame
                 const GlCommandVertex &cmdVertex = commands[i].getVertices()[j];
 
                 cmdVertex.applyTexture();
-                get(cmdVertex.getVertexIndex())
-                    .interpolate(nextFrame.get(cmdVertex.getVertexIndex()), interpolation)
+                vertices[cmdVertex.getVertexIndex()]
+                    .interpolate(nextFrame.vertices[cmdVertex.getVertexIndex()], interpolation)
                     .draw();
             }
         commands[i].end();
@@ -87,7 +82,7 @@ void Frame::draw(const std::vector<GlCommands> &commands) const
                 const GlCommandVertex &cmdVertex = commands[i].getVertices()[j];
 
                 cmdVertex.applyTexture();
-                get(cmdVertex.getVertexIndex()).draw();
+                vertices[cmdVertex.getVertexIndex()].draw();
             }
         commands[i].end();
     }
