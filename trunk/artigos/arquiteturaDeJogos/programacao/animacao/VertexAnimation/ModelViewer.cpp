@@ -78,7 +78,7 @@ void ModelViewer::processEvents(const SDL_Event& event)
 
 				case SDLK_i:
 					fInterpolate = !fInterpolate;
-					apModel->setInpoterlate(fInterpolate);
+					apModel->setInterpolate(fInterpolate);
 					break;
 			}			
 			break;		

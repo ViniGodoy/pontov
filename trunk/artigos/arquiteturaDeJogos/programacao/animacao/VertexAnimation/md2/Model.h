@@ -23,8 +23,7 @@ namespace md2
 
             void process();
             void draw() const;
-
-            void setAnimation(const std::string& name, bool playing=false, bool looping=true);
+            
             void play(const std::string& animation, bool loop=true);
             Animation& getAnimation() const;
 
@@ -37,12 +36,13 @@ namespace md2
 			void playNextAnimation();
 			void playPreviousAnimation();
 
-			inline void setInpoterlate(bool onOff)
+			inline void setInterpolate(bool onOff)
 			{
 				fInterpolate = onOff;
 			}
 
         private:
+			void setAnimation(const std::string& name, bool playing=false, bool looping=true);
 			void setAnimation(Animation *anim, bool playing=false, bool looping=true);
 
             float scale;
@@ -59,7 +59,6 @@ namespace md2
             ogl::Texture texture;
 
 			bool fInterpolate;
-
     };
 }
 

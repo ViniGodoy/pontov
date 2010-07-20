@@ -61,9 +61,7 @@ void Animation::draw(const std::vector<GlCommands> &commands, bool interpolate) 
     }
     else
     {
-        frames[frame].draw(commands,
-            frame == size()-1 ? frames[0] : frames[frame+1],
-            interpolation);
+        frames[frame].draw(commands, frame == size()-1 ? frames[0] : frames[frame+1], interpolation);
     }
 }
 

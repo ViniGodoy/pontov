@@ -20,9 +20,7 @@ namespace md2
             explicit Frame() {}            
 			explicit Frame(std::istream &stream, int numVertices, const Md2Frame_t &frameHeader, float scale);
 
-            void set(const std::vector<Vertex>& _vertices);
-
-            const Vertex& get(int index) const;
+            void set(const std::vector<Vertex>& _vertices);            
 
             void draw(const std::vector<GlCommands> &commands, const Frame& nextFrame, float interpolation) const;
             void draw(const std::vector<GlCommands> &commands) const;
