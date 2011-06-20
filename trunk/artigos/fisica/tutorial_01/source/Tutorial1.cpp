@@ -37,6 +37,10 @@ using namespace std;
 #define PLUGINS_CFG "plugins.cfg"
 #endif
 
+//Esta classe cuida de gerenciar todo funcionamento da fisica desse exemplo
+//Ela mantém uma lista interna com todas formas físicas criadas e objetos de controle
+// da Bullet
+//Quando é destruída cuida de destruir todos objetos e liberar a memória
 class PhysicsManager
 {
 	private:
@@ -111,6 +115,7 @@ class PhysicsManager
 		}
 };
 
+//Esta classe serve apenas de ponte entre corpos rigidos e scene nodes do Ogre
 class SceneObject
 {
 	private:
@@ -213,13 +218,21 @@ class Tutorial1
 
 		void createBoxObject(const char *name, const Ogre::Vector3 &size, const Ogre::Vector3 &pos, float mass, btCollisionShape &shape)
 		{
+			//Criando um scene node para representar o objeto
 			Ogre::SceneNode* node1 = mSceneMgr->getRootSceneNode()->createChildSceneNode(name);
+
+			//criando o rigid body
 			btRigidBody &body = mPhysics.createBody(btTransform(btQuaternion::getIdentity(), btVector3(pos.x, pos.y, pos.z)), mass, shape);
+
+
+			//Criando um "Objeto de cena" com o scene node e o corpo rigido
 			mObjects.push_back(new SceneObject(*node1, body));
 			
+			//Agora criamos um "cubo" para representar nosso objeto e associamos ele com o Scenenode
 			Ogre::Entity *entity = mSceneMgr->createEntity(name, "Prefab_Cube");
 			node1->attachObject(entity);
 
+			//Por fim ajustamos o tamanho do cubo para ele ter a mesma dimensão do objeto físico
 			node1->setScale(size.x / 100.0f, size.y / 100.0f, size.z / 100.0f);
 		}
 
@@ -247,10 +260,7 @@ class Tutorial1
 			// Distancia mínima para que o objeto deve estar da camera para ser renderziado
 			mCamera->setNearClipDistance(5);
 			// Distancia máxima para que o objeto deve estar da camera para ser renderziado
-			mCamera->setFarClipDistance(5000);
-				
-			//Gero um número randomico entre 0 e 7
-			int randomMeshPosition = rand() % 3;		
+			mCamera->setFarClipDistance(5000);			
 
 			createObjects();
 
